@@ -1,17 +1,37 @@
-version: '3'
+# version: '3'
 
 services:
-  postgres:
-    image: postgres:latest
-    restart: always
+  app:
+    build:
+      context: .
+      args:
+        - DEV=true
+    ports:
+      - "8000:8000"
     environment:
-      # pg로 시작하는 이름은 불가
+      POSTGRES_DB: mydb
       POSTGRES_USER: myuser
       POSTGRES_PASSWORD: mypw
-      POSTGRES_DB: mydb
-    ports:
-      # 외부에 노출시킬 포트 : 내부 포트
-      - "5432:5432"
+      POSTGRES_HOST: db
+      DJANGO_SETTINGS_MODULE: django_celery.django_celery.settings
+    volumes:
+      - .:/DjangoCeleryTutorial
+    command: >
+      sh -c "python /DjangoCeleryTutorial/manage.py runserver 0.0.0.0:8000"  # manage.py 경로 수정
+    depends_on:
+      - redis
+#
+#  postgres:
+#    image: postgres:latest
+#    restart: always
+#    environment:
+#      # pg로 시작하는 이름은 불가
+#      POSTGRES_USER: myuser
+#      POSTGRES_PASSWORD: mypw
+#      POSTGRES_DB: mydb
+#    ports:
+#      # 외부에 노출시킬 포트 : 내부 포트
+#      - "5432:5432"
 
   redis:
     image: redis:7.2.6
@@ -19,8 +39,9 @@ services:
   celery:
     build:
       context: .
+
     volumes:
-      - ./app:/django_celery
-    command: celery --app=worker worker -l INFO
+      - .:/DjangoCeleryTutorial
+    command: celery -A django_celery.worker.celery worker --loglevel=info
     depends_on:
       - redis

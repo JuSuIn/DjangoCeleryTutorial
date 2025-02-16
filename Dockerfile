@@ -8,11 +8,11 @@ ENV PYTHONUNBUFFERED 1
 
 ARG DEV=false
 
-COPY requirements.txt /django_celery/
-COPY requirements.dev.txt /django_celery/
+COPY requirements.txt ./
+COPY requirements.dev.txt ./
 COPY django_celery /django_celery/
 
-WORKDIR /django_celery
+WORKDIR /.
 RUN pip install -r requirements.txt
 
 # install this only if it is dev mode

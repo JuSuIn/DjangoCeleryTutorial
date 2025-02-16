@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure--z%#dnt5g2%0m57jd*3_=273q77@#em57in5eh8ot9u0_38srx
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "worker"
+    'django_celery',
+    'django_celery.worker'
 ]
 
 MIDDLEWARE = [
@@ -51,7 +52,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "django_celery.urls"
+ROOT_URLCONF = "DjangoCeleryTutorial.django_celery.django_celery.urls"
 
 TEMPLATES = [
     {
@@ -69,7 +70,8 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "django_celery.wsgi.application"
+WSGI_APPLICATION = "django_celery.django_celery.wsgi.application"
+#WSGI_APPLICATION = "django_celery.wsgi.application"
 
 
 # Database
@@ -129,4 +131,6 @@ CELERY_TIMEZONE = TIME_ZONE
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
 CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
+
 # CELERY_RESULT_BACKEND = os.environ.get("CELERY_BACKEND", "redis://redis:6379/0")
