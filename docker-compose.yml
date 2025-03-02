@@ -39,9 +39,19 @@ services:
   celery:
     build:
       context: .
-
     volumes:
       - .:/DjangoCeleryTutorial
+    command: celery -A django_celery.worker.celery worker --loglevel=info
+    depends_on:
+      - redis
+
+#standardalone setting
+  celery-standalone:
+    build:
+      context: . #standalone_celery
+    volumes:
+      - .:/DjangoCeleryTutorial  # project root setting
+# - .:/DjangoCeleryTutorial/django_celery/standalone_celery:/app
     command: celery -A django_celery.worker.celery worker --loglevel=info
     depends_on:
       - redis
